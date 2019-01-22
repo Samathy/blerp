@@ -1,0 +1,11 @@
+{
+	"description": "Better test output for D's integrated unittesting",
+	"license": "MIT",
+    "targetType": "library",
+    "targetPath": "lib",
+	"authors": [
+		"Samathy Barratt"
+	],
+	"copyright": "Copyright © 2019, Samathy Barratt",
+	"name": "blerp"
+}
