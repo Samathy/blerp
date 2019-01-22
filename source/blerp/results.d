@@ -11,9 +11,9 @@ class Results
 
     public void add(Result r)
     {
-        this.results~=r;
+        this.results ~= r;
 
-        if(r.failed)
+        if (r.failed)
         {
             this.failedTotal++;
         }
@@ -48,7 +48,7 @@ class Result
 
     this(string name, AssertError e)
     {
-        this.name  = name;
+        this.name = name;
         this.exception = e;
 
         this.failed = true;
@@ -56,7 +56,7 @@ class Result
 
     this(string name)
     {
-        this.name  = name;
+        this.name = name;
         this.exception = null;
     }
 

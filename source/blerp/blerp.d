@@ -1,4 +1,3 @@
-
 /**
  * Module to replace the built-in unit tester.
  *
@@ -19,39 +18,39 @@ import blerp.console;
 /**
  * Replace the standard unit test handler.
  */
-version(unittest) shared static this()
+version (unittest) shared static this()
 {
-	Runtime.moduleUnitTester = function()
-	{
-		auto console = new Console();
-		auto results = new Results();
+    Runtime.moduleUnitTester = function() {
+        auto console = new Console();
+        auto results = new Results();
 
-		console.writeHeader();
+        console.writeHeader();
 
-		foreach (module_; ModuleInfo)
-		{
-			if (module_)
-			{
-				auto unitTest = module_.unitTest;
+        foreach (module_; ModuleInfo)
+        {
+            if (module_)
+            {
+                auto unitTest = module_.unitTest;
 
-				if (unitTest)
-				{
-					try
-					{
-						unitTest();
-					}
-					catch (AssertError ex)
-					{
-						results.add(new Result(module_.name, new AssertError(ex.msg, ex.file, ex.line)));
-						continue;
-					}
-					results.add(new Result(module_.name));
-				}
-			}
-		}
+                if (unitTest)
+                {
+                    try
+                    {
+                        unitTest();
+                    }
+                    catch (AssertError ex)
+                    {
+                        results.add(new Result(module_.name,
+                                new AssertError(ex.msg, ex.file, ex.line)));
+                        continue;
+                    }
+                    results.add(new Result(module_.name));
+                }
+            }
+        }
 
-		console.writeReport(results);
+        console.writeReport(results);
 
-		return !results.failedCount();
-	};
+        return !results.failedCount();
+    };
 }
