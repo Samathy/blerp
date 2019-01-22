@@ -60,6 +60,11 @@ class Result
         this.exception = null;
     }
 
+    public string getName()
+    {
+        return this.name;
+    }
+
     public AssertError getException()
     {
         return this.exception;

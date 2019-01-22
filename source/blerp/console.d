@@ -26,6 +26,7 @@ class Console
 
         foreach (result; results.getResults())
         {
+            writeln(result.getName());
             writeln(result.getException().file ~ ":" ~ to!string(result.getException().line));
             writeln(result.getException().msg);
             writeln(result.getException().toString());
