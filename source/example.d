@@ -1,5 +1,3 @@
-module blerp.example;
-
 import blerp.blerp;
 
 int testme(int i, int j)
@@ -8,9 +6,21 @@ int testme(int i, int j)
     return i + j;
 }
 
+int testme2(int i, int j)
+{
+
+    return i + j;
+}
+
 unittest
 {
-    assert(testme(10, 10) == 20);
-    assert(testme(10, 10) == 10);
+    
+    assert(testme2(10, 10) == 20);
+
+}
+
+unittest
+{
+    assert(testme(10, 10) == 40);
 
 }
