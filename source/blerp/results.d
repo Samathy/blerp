@@ -30,6 +30,11 @@ class Results
         return cast(int) this.results.length - this.failedTotal;
     }
 
+    public int totalTests()
+    {
+        return cast(int) this.results.length;
+    }
+
     public Result[] getResults()
     {
         return this.results;
@@ -68,6 +73,16 @@ class Result
     public AssertError getException()
     {
         return this.exception;
+    }
+
+    public bool hasException()
+    {
+        if (this.exception !is null)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private

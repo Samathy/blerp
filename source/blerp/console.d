@@ -20,16 +20,20 @@ class Console
 
     public void writeReport(Results results)
     {
+        writeln(to!string(results.failedCount) ~ " Modules Failed " ~ to!string(
+                results.succeededCount()) ~ " Modules Succeeded");
 
-        writeln(to!string(results.failedCount) ~ " Tests Failed " ~ to!string(
-                results.succeededCount()) ~ " Tests Succeeded");
+        writeln(to!string(results.totalTests()) ~ " Modules ran");
 
         foreach (result; results.getResults())
         {
             writeln(result.getName());
-            writeln(result.getException().file ~ ":" ~ to!string(result.getException().line));
-            writeln(result.getException().msg);
-            writeln(result.getException().toString());
+            if (result.hasException())
+            {
+                writeln(result.getException().file ~ ":" ~ to!string(result.getException().line));
+                writeln(result.getException().msg);
+                writeln(result.getException().toString());
+            }
         }
     }
 }
