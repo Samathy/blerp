@@ -1,9 +1,9 @@
 module blerp.example;
+import blerp.blerp : BlerpTest;
 
 version (unittest)
 {
     import blerp.blerp;
-    import blerp.blerp : BlerpTest;
 }
 
 version (unittest) static this()

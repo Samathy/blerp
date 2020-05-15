@@ -28,7 +28,7 @@ version (unittest) shared static this()
     Runtime.moduleUnitTester = { return true; };
 }
 
-version (unittest) struct BlerpTest
+struct BlerpTest
 {
     string name;
 }
@@ -79,7 +79,8 @@ version (unittest) template runTests(string module_name) //if( __traits(isModule
             }
             else
             {
-                writeln(format("          Ignoring test %s, it is not marked as a BlerpTest", test_name));
+                writeln(format("          Ignoring test %s, it is not marked as a BlerpTest",
+                        test_name));
             }
         }
 
