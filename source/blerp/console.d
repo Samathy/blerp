@@ -29,9 +29,11 @@ class Console
         {
             if (result.hasException())
             {
+                writeln(format("==================================  %s  ==================================\n",
+                        result.getName()));
                 writeln(result.getException().file ~ ":" ~ to!string(result.getException().line));
                 writeln(result.getException().msg);
-                writeln(result.getException().toString());
+                writeln(result.getException().info);
             }
         }
 

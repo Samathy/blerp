@@ -10,6 +10,7 @@ import blerp.results;
 import blerp.console;
 
 import std.stdio;
+import std.conv: to;
 import std.format : format;
 import std.traits : getUDAs;
 
@@ -69,7 +70,7 @@ version (unittest) template runTests(string module_name) //if( __traits(isModule
                 }
                 catch (AssertError ex)
                 {
-                    results.add(new Result(test_name, new AssertError(ex.msg, ex.file, ex.line)));
+                    results.add(new Result(test_name, exceptionInfo(true, ex.msg, ex.file, ex.line, to!string(ex.info))));
                     writeln(format("FAILED    %s", test_name));
                     continue;
                 }

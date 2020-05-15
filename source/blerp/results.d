@@ -2,6 +2,18 @@ module blerp.results;
 
 import core.exception;
 
+import std.conv: to;
+
+struct exceptionInfo
+{
+    bool hasInfo;
+    string msg;
+    string file;
+    ulong line;
+    string info;
+}
+           
+
 class Results
 
 {
@@ -51,10 +63,11 @@ class Results
 class Result
 {
 
-    this(string name, AssertError e)
+    this(string name, exceptionInfo ex)
     {
         this.name = name;
-        this.exception = e;
+        this.exception = ex;
+        this.exception.hasInfo = true;
 
         this.failed = true;
     }
@@ -62,7 +75,7 @@ class Result
     this(string name)
     {
         this.name = name;
-        this.exception = null;
+        this.exception.hasInfo = false;
     }
 
     public string getName()
@@ -70,14 +83,14 @@ class Result
         return this.name;
     }
 
-    public AssertError getException()
+    public exceptionInfo getException()
     {
         return this.exception;
     }
 
     public bool hasException()
     {
-        if (this.exception !is null)
+        if (this.exception.hasInfo )
         {
             return true;
         }
@@ -88,7 +101,7 @@ class Result
     private
     {
         string name;
-        AssertError exception;
+        exceptionInfo exception;
 
         bool failed = false;
     }
