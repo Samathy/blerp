@@ -1,33 +1,3 @@
-/**
-  Copyright (c) 2013 Gary Willoughby
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-**/
-
-/* https://github.com/nomad-software/dunit/blob/master/source/dunit/moduleunittester.d */
-
-/**
- * Module to replace the built-in unit tester.
- *
- * License:
- *     MIT. See LICENSE for full details.
- */
 module blerp.blerp;
 
 /**
@@ -39,42 +9,65 @@ import core.runtime;
 import blerp.results;
 import blerp.console;
 
+import std.stdio;
+import std.format : format;
+
 /**
  * Replace the standard unit test handler.
  */
+//version (unittest) shared static this()
+
+template Tuple(T...)
+{
+    alias Tuple = T;
+}
+
 version (unittest) shared static this()
 {
-    Runtime.moduleUnitTester = function() {
+    Runtime.moduleUnitTester = { return true; };
+}
+
+version (unittest) template runTests(string module_name) //if( __traits(isModule, mixin(packageName(mixin(module_name)"."~Nmodule_name)))
+{
+    bool runTests()
+    {
         auto console = new Console();
         auto results = new Results();
 
-        console.writeHeader();
+        console.writeHeader(module_name);
 
-        foreach (module_; ModuleInfo)
+        mixin("static import " ~ module_name ~ ";");
+
+        alias tests = Tuple!(__traits(getUnitTests, mixin(module_name)));
+
+        foreach (test; tests)
         {
-            if (module_)
-            {
-                auto unitTest = module_.unitTest;
+            alias test_attributes = Tuple!(__traits(getAttributes, test));
+            string test_name;
 
-                if (unitTest)
-                {
-                    try
-                    {
-                        unitTest();
-                    }
-                    catch (AssertError ex)
-                    {
-                        results.add(new Result(module_.name,
-                                new AssertError(ex.msg, ex.file, ex.line)));
-                        continue;
-                    }
-                    results.add(new Result(module_.name));
-                }
+            static if (test_attributes.length >= 1)
+            {
+                test_name = format("%s.%s", module_name, test_attributes[0]);
             }
+            else
+            {
+                test_name = format("%s.%s", module_name);
+            }
+
+            try
+            {
+                test();
+            }
+            catch (AssertError ex)
+            {
+                results.add(new Result(test_name, new AssertError(ex.msg, ex.file, ex.line)));
+                continue;
+            }
+            results.add(new Result(test_name));
         }
 
         console.writeReport(results);
 
-        return !results.failedCount();
-    };
+        return !results.failedCount;
+    }
 }

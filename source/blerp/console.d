@@ -2,6 +2,7 @@ module blerp.console;
 
 import std.stdio;
 import std.conv : to;
+import std.format : format;
 
 import blerp.results;
 
@@ -12,18 +13,18 @@ class Console
     {
     }
 
-    public void writeHeader()
+    public void writeHeader(string module_name)
     {
-
-        writeln("==================================  BLERP  ==================================");
+        writeln(format("==================================  %s  ==================================",
+                module_name));
     }
 
     public void writeReport(Results results)
     {
-        writeln(to!string(results.failedCount) ~ " Modules Failed " ~ to!string(
-                results.succeededCount()) ~ " Modules Succeeded");
+        writeln(to!string(results.failedCount) ~ " Tests Failed " ~ to!string(
+                results.succeededCount()) ~ " Tests Succeeded");
 
-        writeln(to!string(results.totalTests()) ~ " Modules ran");
+        writeln(to!string(results.totalTests()) ~ " Test ran");
 
         foreach (result; results.getResults())
         {
