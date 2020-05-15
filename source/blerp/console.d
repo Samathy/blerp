@@ -15,20 +15,18 @@ class Console
 
     public void writeHeader(string module_name)
     {
-        writeln(format("==================================  %s  ==================================",
+        writeln(format("==================================  %s  ==================================\n",
                 module_name));
     }
 
     public void writeReport(Results results)
     {
-        writeln(to!string(results.failedCount) ~ " Tests Failed " ~ to!string(
-                results.succeededCount()) ~ " Tests Succeeded");
-
-        writeln(to!string(results.totalTests()) ~ " Test ran");
+        writeln(format("\n%s Tests Ran", to!string(results.totalTests())));
+        writeln(format("%s Tests Failed and %s Tests Succeeded.\n",
+                to!string(results.failedCount), to!string(results.succeededCount())));
 
         foreach (result; results.getResults())
         {
-            writeln(result.getName());
             if (result.hasException())
             {
                 writeln(result.getException().file ~ ":" ~ to!string(result.getException().line));
@@ -36,5 +34,7 @@ class Console
                 writeln(result.getException().toString());
             }
         }
+
+        writeln("\n");
     }
 }

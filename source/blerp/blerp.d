@@ -11,7 +11,7 @@ import blerp.console;
 
 import std.stdio;
 import std.format : format;
-import std.traits: getUDAs;
+import std.traits : getUDAs;
 
 /**
  * Replace the standard unit test handler.
@@ -51,7 +51,7 @@ version (unittest) template runTests(string module_name) //if( __traits(isModule
             alias test_attribute = getUDAs!(test, BlerpTest);
             string test_name;
 
-            static if ( test_attribute.length >= 1)
+            static if (test_attribute.length >= 1)
             {
                 test_name = format("%s.%s", module_name, test_attribute[0].name);
             }
@@ -70,13 +70,16 @@ version (unittest) template runTests(string module_name) //if( __traits(isModule
                 catch (AssertError ex)
                 {
                     results.add(new Result(test_name, new AssertError(ex.msg, ex.file, ex.line)));
+                    writeln(format("FAILED    %s", test_name));
                     continue;
                 }
                 results.add(new Result(test_name));
+                writeln(format("PASSED    %s", test_name));
+
             }
             else
             {
-                writeln(format("Ignoring test %s, it is not marked as a BlerpTest", test_name));
+                writeln(format("          Ignoring test %s, it is not marked as a BlerpTest", test_name));
             }
         }
 
