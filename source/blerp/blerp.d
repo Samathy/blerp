@@ -11,6 +11,7 @@ import blerp.console;
 
 import std.stdio;
 import std.format : format;
+import std.traits: getUDAs;
 
 /**
  * Replace the standard unit test handler.
@@ -25,6 +26,11 @@ template Tuple(T...)
 version (unittest) shared static this()
 {
     Runtime.moduleUnitTester = { return true; };
+}
+
+version (unittest) struct BlerpTest
+{
+    string name;
 }
 
 version (unittest) template runTests(string module_name) //if( __traits(isModule, mixin(packageName(mixin(module_name)"."~Nmodule_name)))
@@ -42,28 +48,36 @@ version (unittest) template runTests(string module_name) //if( __traits(isModule
 
         foreach (test; tests)
         {
-            alias test_attributes = Tuple!(__traits(getAttributes, test));
+            alias test_attribute = getUDAs!(test, BlerpTest);
             string test_name;
 
-            static if (test_attributes.length >= 1)
+            static if ( test_attribute.length >= 1)
             {
-                test_name = format("%s.%s", module_name, test_attributes[0]);
+                test_name = format("%s.%s", module_name, test_attribute[0].name);
             }
             else
             {
-                test_name = format("%s.%s", module_name);
+                test_name = format("%s", module_name);
             }
 
-            try
+            //If this is not a BlerpTest marked test, ignore it.
+            if (test_attribute.length >= 1)
             {
-                test();
+                try
+                {
+                    test();
+                }
+                catch (AssertError ex)
+                {
+                    results.add(new Result(test_name, new AssertError(ex.msg, ex.file, ex.line)));
+                    continue;
+                }
+                results.add(new Result(test_name));
             }
-            catch (AssertError ex)
+            else
             {
-                results.add(new Result(test_name, new AssertError(ex.msg, ex.file, ex.line)));
-                continue;
+                writeln(format("Ignoring test %s, it is not marked as a BlerpTest", test_name));
             }
-            results.add(new Result(test_name));
         }
 
         console.writeReport(results);

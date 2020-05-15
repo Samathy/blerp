@@ -1,5 +1,10 @@
 module blerp.example;
-import blerp.blerp;
+
+version(unittest)
+{
+    import blerp.blerp;
+    import blerp.blerp: BlerpTest;
+}
 
 version (unittest) static this()
 {
@@ -29,4 +34,8 @@ int testme2(int i, int j)
 {
     assert(testme(10, 10) == 40);
 
+}
+@BlerpTest("hello")unittest
+{
+    assert(100 == 100);
 }
