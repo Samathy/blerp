@@ -6,13 +6,20 @@ Because by default, D doesnt really print anything useful if all tests pass.
 
 Blerp discovers tests at compile time.
 
+Blerp allows you to name your tests too!
+
 It doesnt do anything clever like colour the output atm.
 
 
 ## Including blerp in your project
 
-Blerp is currently not available on the dub package hub.
-[Clone blerp](https://github.com/Samathy/blerp), and run
+Blerp is available on the dub package hub.
+Inside your package's directory, run:
+
+    dub add blerp
+
+You can also install it manually:
+[Clone blerp](https://github.com/Samathy/blerp), and run the following inside your package directory:
     
     dub add-local path-to-blerp
 
