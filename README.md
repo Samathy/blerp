@@ -39,6 +39,8 @@ before adding the snippet:
 
 to your dub.json.
 
+### Enabling Blerp
+
 At the top of one of your project's files, include: 
 
 ```
